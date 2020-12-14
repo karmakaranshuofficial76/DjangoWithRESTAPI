@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AK Infotech Solutions</title>
+    <link rel="stylesheet" type="text/css" href= "{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/fontawesome-all.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/theme.css' %}">
+</head>
+
+<body>
+
+    <div class="form-body">
+
+        <div class="row">
+
+            <div class="img-holder">
+
+                <div class="bg" style="background-color: #42bfdb"></div>
+
+                <div class="info-holder">
+
+                    <h3>Get more things done with API Detection Platform.</h3>
+
+                    <p>Access To The Most Powerful Tool In The Entire Design and Web Industry.</p>
+
+                    <img id = "outImage" src="{% static 'images/graphic.svg' %}" alt="">
+
+                </div>
+
+            </div>
+
+            <div class="form-holder">
+
+                <div class="form-content" style="background-color: #853c91">
+
+                    <div class="form-items">
+
+                        <div class="website-logo-inside">
+
+                            <a href="">
+
+                                <div class="logo">
+
+                                    <p style="color: white; font-size: 30px;"><b>AK Infotech Solutions</b></p>
+
+                                    <p style="color: #00aced; font-size: 20px; margin-top: -25px">Powered By 8th Gen Systems</p>
+
+                                </div>
+
+                            </a>
+
+                        </div>
+
+                        <div class="page-links">
+
+                            <a href=" " class="active">Please Upload Images To Be Detected</a>
+
+                        </div>
+
+
+                        <form id="MyForm">
+                            {% csrf_token %}
+
+                            <select class="form-control" id = "Service" name="service" required>
+
+                                <option value="">Choose Your Services</option>
+
+                                <option value="Object Detection">Object Detection</option>
+
+                                <option value="Face Analysis">Face Analysis</option>
+
+                                <option value="Celebrity Detection">Celebrity Detection</option>
+
+                            </select>
+
+                            <br>
+
+                            <input id="inputImage" class="form-control" type="file" onchange="ChangeImage(event)" name="image" required>
+
+                            <div class="form-button">
+
+                                <button id="submit" type="submit" class="ibtn">Start</button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        function ChangeImage(e)
+        {
+            var image;
+            image = document.getElementById("outImage");
+            image.src = URL.createObjectURL(e.target.files[0]);
+        }
+
+    </script>
+//Creating My API
+    <script>
+
+        const myForm = document.getElementById("MyForm");
+        const myFile = document.getElementById("inputImage");
+        const myService = document.getElementById("Service");
+        const formData = new FormData();
+
+        async function GetDetails()
+        {
+            formData.append("image", myFile.files[0])
+            formData.append("service", myService.value)
+
+            let response = await fetch("http://127.0.0.1:7000/api/v1/", {
+                method : "post",
+                body : formData
+            });
+            let data = await response.json();
+
+            var image;
+            image = document.getElementById("outImage");
+            image.src = data["Url"];
+        }
+
+        myForm.addEventListener("submit", e => {
+            e.preventDefault();
+            GetDetails();
+        });
+
+    </script>
+
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+
+    <script src="{% static 'js/popper.min.js' %}"></script>
+
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+
+</html>
